@@ -1092,7 +1092,7 @@
             id: 'we-opened',
             name: 'We Openned!',
             image: 'we_open.png',
-            price: 300,
+            price: 3000,
             items: [
                 { name: 'Plush Pepe', file: 'GiftStickersByAutoGiftNews_1.gif', price: 900000, rarity_ru: 'Супер-Легендарный', rarity_color: 'super-legendary', chance: 0.1 },
                 { name: 'Heart Lockets', file: 'GiftStickersByAutoGiftNews_2.gif', price: 200000, rarity_ru: 'Легендарный', rarity_color: 'legendary', chance: 0.4 },
@@ -1316,6 +1316,9 @@
         }
         caseOpenStats[currentCase.id] = (caseOpenStats[currentCase.id] || 0) + 1;
 
+        // Save data after each drop
+        saveData();
+
         const finalPosition = 25;
         const newItems = [];
         for (let i = 0; i < finalPosition; i++) {
@@ -1431,6 +1434,32 @@
         statFavoriteCase.textContent = favoriteCaseName;
     }
 
+    function saveData() {
+        const data = {
+            userBalance,
+            userInventory,
+            casesOpenedCount,
+            bestDrop,
+            caseOpenStats
+        };
+        localStorage.setItem('giftRunnerData', JSON.stringify(data));
+    }
+
+    function loadData() {
+        const savedData = localStorage.getItem('giftRunnerData');
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            userBalance = data.userBalance;
+            userInventory = data.userInventory;
+            casesOpenedCount = data.casesOpenedCount;
+            bestDrop = data.bestDrop;
+            caseOpenStats = data.caseOpenStats;
+        } else {
+            // Initial balance for a new user
+            userBalance = 10000;
+        }
+    }
+
     openBtn.addEventListener('click', openCase);
     backButton.addEventListener('click', () => switchSection('cases'));
 
@@ -1458,6 +1487,7 @@
 
     // Initial setup - Main function for Telegram authorization
     function initApp() {
+        loadData(); // Load saved data first
         if (window.Telegram && window.Telegram.WebApp) {
             const initData = Telegram.WebApp.initDataUnsafe;
             if (initData.user) {
@@ -1467,7 +1497,7 @@
                 
                 mainHeader.style.display = 'flex';
                 balanceInfo.style.display = 'flex';
-                userBalance = 10000; // Starting balance
+
                 updateBalanceDisplay();
                 
                 switchSection('cases');
