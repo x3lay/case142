@@ -1302,13 +1302,10 @@
         }
 
         userBalance -= casePrice;
-        updateBalanceDisplay();
-
-        openBtn.disabled = true;
 
         const winningItem = getRandomItemByChance(currentCase.items);
 
-        // Update stats
+        // Обновляем статистику
         casesOpenedCount++;
         userInventory.push(winningItem);
         if (typeof winningItem.price === 'number' && (!bestDrop || winningItem.price > bestDrop.price)) {
@@ -1316,8 +1313,11 @@
         }
         caseOpenStats[currentCase.id] = (caseOpenStats[currentCase.id] || 0) + 1;
 
-        // Save data after each drop
+        // Сохраняем данные сразу после обновления
         saveData();
+
+        updateBalanceDisplay();
+        openBtn.disabled = true;
 
         const finalPosition = 25;
         const newItems = [];
@@ -1434,28 +1434,43 @@
         statFavoriteCase.textContent = favoriteCaseName;
     }
 
+    // Сохранение данных в localStorage
     function saveData() {
-        const data = {
-            userBalance,
-            userInventory,
-            casesOpenedCount,
-            bestDrop,
-            caseOpenStats
-        };
-        localStorage.setItem('giftRunnerData', JSON.stringify(data));
+        try {
+            const data = {
+                userBalance,
+                userInventory,
+                casesOpenedCount,
+                bestDrop,
+                caseOpenStats
+            };
+            localStorage.setItem('giftRunnerData', JSON.stringify(data));
+            console.log('Данные успешно сохранены.');
+        } catch (e) {
+            console.error('Ошибка при сохранении данных в localStorage:', e);
+        }
     }
 
+    // Загрузка данных из localStorage
     function loadData() {
-        const savedData = localStorage.getItem('giftRunnerData');
-        if (savedData) {
-            const data = JSON.parse(savedData);
-            userBalance = data.userBalance;
-            userInventory = data.userInventory;
-            casesOpenedCount = data.casesOpenedCount;
-            bestDrop = data.bestDrop;
-            caseOpenStats = data.caseOpenStats;
-        } else {
-            // Initial balance for a new user
+        try {
+            const savedData = localStorage.getItem('giftRunnerData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                userBalance = data.userBalance;
+                userInventory = data.userInventory;
+                casesOpenedCount = data.casesOpenedCount;
+                bestDrop = data.bestDrop;
+                caseOpenStats = data.caseOpenStats;
+                console.log('Данные успешно загружены.');
+            } else {
+                // Начальный баланс для нового пользователя
+                userBalance = 10000;
+                console.log('Сохраненных данных не найдено, установлен начальный баланс.');
+            }
+        } catch (e) {
+            console.error('Ошибка при загрузке данных из localStorage:', e);
+            // Установка значений по умолчанию в случае ошибки
             userBalance = 10000;
         }
     }
@@ -1485,13 +1500,12 @@
         switchSection('cases');
     });
 
-    // Initial setup - Main function for Telegram authorization
+    // Инициализация приложения
     function initApp() {
-        loadData(); // Load saved data first
+        loadData(); // Загружаем данные в самом начале
         if (window.Telegram && window.Telegram.WebApp) {
             const initData = Telegram.WebApp.initDataUnsafe;
             if (initData.user) {
-                // User is authenticated
                 telegramUser = initData.user;
                 casesTitle.textContent = `Добро пожаловать, ${telegramUser.first_name || 'Пользователь'}!`;
                 
@@ -1503,11 +1517,9 @@
                 switchSection('cases');
                 populateCaseGallery();
             } else {
-                // Not authenticated (e.g., app opened directly in browser)
                 welcomeMessage.style.display = 'block';
             }
         } else {
-            // Not a Telegram environment
             welcomeMessage.style.display = 'block';
         }
     }
