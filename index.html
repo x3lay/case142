@@ -754,6 +754,231 @@
             padding: 50px;
         }
 
+        /* Адаптивный дизайн для мобильных устройств */
+        
+        /* Медиа-запрос для экранов шириной до 768px (планшеты) */
+        @media (max-width: 768px) {
+            .main-header {
+                padding: 10px 20px;
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .nav-menu {
+                gap: 15px;
+                font-size: 0.9em;
+            }
+
+            .logo-section {
+                flex-direction: column;
+            }
+
+            .logo-section img {
+                height: 40px;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            h2 {
+                font-size: 2em;
+            }
+
+            .case-gallery {
+                gap: 20px;
+            }
+
+            .case-card {
+                max-width: 250px;
+            }
+
+            .roulette-container {
+                height: 200px;
+            }
+
+            .item-card {
+                min-width: 150px;
+                height: 150px;
+            }
+
+            .item-gif {
+                width: 100px;
+                height: 100px;
+            }
+
+            .open-button {
+                padding: 15px 30px;
+                font-size: 1.4em;
+            }
+
+            .item-list-container {
+                padding: 20px;
+            }
+            
+            .item-list-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+        }
+
+        /* Медиа-запрос для экранов шириной до 480px (смартфоны) */
+        @media (max-width: 480px) {
+            .main-header {
+                padding: 10px;
+            }
+
+            .logo-section h1 {
+                font-size: 1.5em;
+            }
+
+            .nav-menu {
+                gap: 10px;
+                font-size: 0.8em;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .case-gallery {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .roulette-container {
+                height: 150px;
+            }
+
+            .item-card {
+                min-width: 120px;
+                height: 120px;
+            }
+
+            .item-gif {
+                width: 80px;
+                height: 80px;
+            }
+
+            .open-button {
+                padding: 10px 20px;
+                font-size: 1.2em;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+
+            .modal-content .item-gif {
+                width: 100px;
+                height: 100px;
+            }
+
+            .modal-content h2 {
+                font-size: 1.5em;
+            }
+
+            .modal-content p {
+                font-size: 1.1em;
+            }
+
+            .item-list-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+
+        /* Profile Section Styles */
+        .profile-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--color-card-border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--color-button);
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+        }
+
+        .profile-info {
+            text-align: left;
+        }
+
+        .profile-info p {
+            font-size: 1.2em;
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+
+        .profile-info span {
+            font-weight: bold;
+            color: var(--color-button);
+        }
+
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h4 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5em;
+            margin: 0 0 10px;
+            color: var(--color-button);
+        }
+
+        .stat-card p {
+            font-size: 1.1em;
+            margin: 0;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 25px;
+            justify-items: center;
+            padding-top: 20px;
+        }
+
     </style>
 </head>
 <body>
@@ -802,12 +1027,36 @@
 
     <div class="content-section" id="inventory-section">
         <h2>Инвентарь</h2>
-        <p>Здесь будут храниться ваши NFT-подарки.</p>
+        <p id="inventory-empty-message" style="text-align: center; display: none;">Инвентарь пуст. Откройте кейс, чтобы получить предметы!</p>
+        <div class="inventory-grid" id="inventory-grid"></div>
     </div>
 
     <div class="content-section" id="profile-section">
-        <h2>Профиль</h2>
-        <p>Здесь будет информация о вашем аккаунте.</p>
+        <h2 id="profile-title">Профиль</h2>
+        <div class="profile-content">
+            <div class="profile-header">
+                <img id="profile-photo" class="profile-picture" src="default_avatar.png" alt="Профиль">
+                <div class="profile-info">
+                    <p>ID: <span id="profile-id"></span></p>
+                    <p>Имя: <span id="profile-name"></span></p>
+                    <p>Баланс: <span id="profile-balance"></span> ⭐</p>
+                </div>
+            </div>
+            <div class="profile-stats-grid">
+                <div class="stat-card">
+                    <h4>Открыто кейсов</h4>
+                    <p id="stat-cases-opened">0</p>
+                </div>
+                <div class="stat-card">
+                    <h4>Лучший дроп</h4>
+                    <p id="stat-best-drop">Нет</p>
+                </div>
+                <div class="stat-card">
+                    <h4>Любимый кейс</h4>
+                    <p id="stat-favorite-case">Нет</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -893,6 +1142,11 @@
     let userBalance = 0;
     let currentCase = null;
     let activeSection = 'cases';
+    let userInventory = [];
+    let casesOpenedCount = 0;
+    let bestDrop = null;
+    let caseOpenStats = {};
+    let telegramUser = null;
 
     const mainHeader = document.querySelector('.main-header');
     const balanceInfo = document.getElementById('balance-info');
@@ -922,7 +1176,17 @@
     const chancesList = document.getElementById('chances-list');
 
     const inventorySection = document.getElementById('inventory-section');
+    const inventoryGrid = document.getElementById('inventory-grid');
+    const inventoryEmptyMessage = document.getElementById('inventory-empty-message');
+
     const profileSection = document.getElementById('profile-section');
+    const profilePhoto = document.getElementById('profile-photo');
+    const profileId = document.getElementById('profile-id');
+    const profileName = document.getElementById('profile-name');
+    const profileBalance = document.getElementById('profile-balance');
+    const statCasesOpened = document.getElementById('stat-cases-opened');
+    const statBestDrop = document.getElementById('stat-best-drop');
+    const statFavoriteCase = document.getElementById('stat-favorite-case');
 
     function createItemElement(item) {
         const card = document.createElement('div');
@@ -930,7 +1194,7 @@
         card.innerHTML = `
             <img src="${item.file}" alt="${item.name}" class="item-gif">
             <div class="item-name">${item.name}</div>
-            <div class="item-price">${item.price} ⭐</div>
+            <div class="item-price">${typeof item.price === 'number' ? item.price : item.price} ⭐</div>
         `;
         return card;
     }
@@ -999,8 +1263,8 @@
             card.innerHTML = `
                 <img src="${item.file}" alt="${item.name}" class="item-gif">
                 <div class="item-name">${item.name}</div>
-                <div class="item-price">${item.price} ⭐</div>
-                <div class="item-chance">${item.chance}%</div>
+                <div class="item-price">${typeof item.price === 'number' ? item.price : item.price} ⭐</div>
+                <div class="item-chance">${item.chance.toFixed(2)}%</div>
             `;
             itemList.appendChild(card);
         });
@@ -1044,6 +1308,14 @@
 
         const winningItem = getRandomItemByChance(currentCase.items);
 
+        // Update stats
+        casesOpenedCount++;
+        userInventory.push(winningItem);
+        if (typeof winningItem.price === 'number' && (!bestDrop || winningItem.price > bestDrop.price)) {
+            bestDrop = winningItem;
+        }
+        caseOpenStats[currentCase.id] = (caseOpenStats[currentCase.id] || 0) + 1;
+
         const finalPosition = 25;
         const newItems = [];
         for (let i = 0; i < finalPosition; i++) {
@@ -1074,7 +1346,7 @@
                 <span class="modal-close" onclick="closeModal()">&times;</span>
                 <img src="${winningItem.file}" alt="${winningItem.name}" class="item-gif">
                 <h2>${winningItem.name}</h2>
-                <p>${winningItem.rarity_ru}, ${winningItem.price} ⭐</p>
+                <p>${winningItem.rarity_ru}, ${typeof winningItem.price === 'number' ? winningItem.price : winningItem.price} ⭐</p>
             `;
             modalItemInfo.classList.add(`modal-${winningItem.rarity_color}`);
             resultModal.style.display = 'flex';
@@ -1112,6 +1384,53 @@
         }
     }
 
+    function renderInventory() {
+        inventoryGrid.innerHTML = '';
+        if (userInventory.length === 0) {
+            inventoryEmptyMessage.style.display = 'block';
+        } else {
+            inventoryEmptyMessage.style.display = 'none';
+            userInventory.forEach(item => {
+                const card = document.createElement('div');
+                card.classList.add('item-list-card', item.rarity_color);
+                card.innerHTML = `
+                    <img src="${item.file}" alt="${item.name}" class="item-gif">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">${typeof item.price === 'number' ? item.price : item.price} ⭐</div>
+                `;
+                inventoryGrid.appendChild(card);
+            });
+        }
+    }
+
+    function renderProfile() {
+        if (!telegramUser) return;
+        
+        profileId.textContent = telegramUser.id;
+        profileName.textContent = telegramUser.first_name || 'Пользователь';
+        profileBalance.textContent = userBalance;
+
+        if (telegramUser.photo_url) {
+            profilePhoto.src = telegramUser.photo_url;
+        } else {
+            profilePhoto.src = 'https://via.placeholder.com/120?text=No+Photo'; // Placeholder
+        }
+
+        statCasesOpened.textContent = casesOpenedCount;
+        statBestDrop.textContent = bestDrop ? `${bestDrop.name} (${bestDrop.price} ⭐)` : 'Нет';
+
+        let maxOpened = 0;
+        let favoriteCaseName = 'Нет';
+        for (const caseId in caseOpenStats) {
+            if (caseOpenStats[caseId] > maxOpened) {
+                maxOpened = caseOpenStats[caseId];
+                const caseItem = cases.find(c => c.id === caseId);
+                favoriteCaseName = caseItem ? caseItem.name : 'Неизвестно';
+            }
+        }
+        statFavoriteCase.textContent = favoriteCaseName;
+    }
+
     openBtn.addEventListener('click', openCase);
     backButton.addEventListener('click', () => switchSection('cases'));
 
@@ -1123,6 +1442,11 @@
                 alert('Скоро...');
             } else {
                 switchSection(section);
+                if (section === 'inventory') {
+                    renderInventory();
+                } else if (section === 'profile') {
+                    renderProfile();
+                }
             }
         });
     });
@@ -1138,8 +1462,8 @@
             const initData = Telegram.WebApp.initDataUnsafe;
             if (initData.user) {
                 // User is authenticated
-                const userName = initData.user.first_name || 'Пользователь';
-                casesTitle.textContent = `Добро пожаловать, ${userName}!`;
+                telegramUser = initData.user;
+                casesTitle.textContent = `Добро пожаловать, ${telegramUser.first_name || 'Пользователь'}!`;
                 
                 mainHeader.style.display = 'flex';
                 balanceInfo.style.display = 'flex';
