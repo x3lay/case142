@@ -978,7 +978,113 @@
             justify-items: center;
             padding-top: 20px;
         }
+        
+        /* New Styles for Admin and Event */
+        .admin-section, .event-section {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--color-card-border);
+            margin-top: 50px;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .admin-section h2, .event-section h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .admin-section form, .admin-section .admin-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
+        .admin-section label {
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .admin-section input, .admin-section select, .admin-section textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--color-text);
+            font-size: 1em;
+        }
+
+        .admin-section button {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--color-button);
+            color: #fff;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .admin-section button:hover {
+            background-color: var(--color-button-hover);
+        }
+
+        .event-container {
+            position: relative;
+            background: linear-gradient(135deg, #1c1c1c, #333);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 0 20px var(--color-event-shadow, rgba(255, 0, 85, 0.5));
+            animation: pulse-border 1.5s infinite alternate;
+            margin-bottom: 30px;
+        }
+
+        .event-container::before {
+            content: 'Событие!';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-event, #ff0055);
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .event-container h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2em;
+            margin: 0;
+            color: var(--color-event, #ff0055);
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.4);
+        }
+
+        .event-container p {
+            font-size: 1.1em;
+            margin: 10px 0 0;
+            line-height: 1.5;
+        }
+
+        @keyframes pulse-border {
+            from {
+                border: 2px solid var(--color-event, #ff0055);
+            }
+            to {
+                border: 2px solid transparent;
+            }
+        }
+        
     </style>
 </head>
 <body>
@@ -995,6 +1101,7 @@
         <a href="#" data-section="inventory">Инвентарь</a>
         <a href="#" data-section="upgrade">Апгрейд</a>
         <a href="#" data-section="profile">Профиль</a>
+        <a href="#" data-section="admin" id="admin-link" style="display: none;">Админка</a>
     </nav>
     <div class="balance-info" id="balance-info">
         Баланс: <span id="balance-value">0</span> ⭐
@@ -1006,6 +1113,15 @@
         <h1>Добро пожаловать в GiftRunner!</h1>
         <p>Пожалуйста, запустите это приложение из Telegram-бота, чтобы авторизоваться и получить доступ.</p>
     </div>
+    
+    <div class="content-section" id="event-section" style="display: none;">
+        <div class="event-container" id="event-container">
+            <h3 id="event-name"></h3>
+            <p id="event-description"></p>
+            <p id="event-time"></p>
+        </div>
+    </div>
+    
     <div class="content-section" id="cases-section">
         <h1 id="cases-title">Выберите кейс</h1>
         <div class="case-gallery" id="case-gallery"></div>
@@ -1058,6 +1174,56 @@
             </div>
         </div>
     </div>
+
+    <div class="content-section" id="admin-section">
+        <h2>Админка</h2>
+        <div class="admin-actions">
+            <form id="balance-form">
+                <h3>Управление балансом</h3>
+                <label for="balance-id">ID пользователя:</label>
+                <input type="number" id="balance-id" name="id" placeholder="Введите ID" required>
+                <label for="balance-amount">Количество ⭐:</label>
+                <input type="number" id="balance-amount" name="amount" placeholder="Введите количество" required>
+                <button type="submit">Выдать баланс</button>
+            </form>
+
+            <form id="flags-form">
+                <h3>Управление флагами шансов</h3>
+                <label for="flag-select">Выберите флаг:</label>
+                <select id="flag-select" name="flag">
+                    <option value="100_per_rarity_super">100% на Супер-Легендарный</option>
+                    <option value="100_per_rarity">100% на Легендарный</option>
+                    <option value="double_chances">Удвоенные шансы</option>
+                    <option value="trible_chances">Утроенные шансы</option>
+                </select>
+                <label for="flag-value">Состояние:</label>
+                <select id="flag-value" name="value">
+                    <option value="true">Включить</option>
+                    <option value="false">Выключить</option>
+                </select>
+                <button type="submit">Установить флаг</button>
+            </form>
+
+            <form id="event-form">
+                <h3>Создать событие</h3>
+                <label for="event-name-input">Имя события:</label>
+                <input type="text" id="event-name-input" name="name" required>
+                <label for="event-time-input">Время события (ч.):</label>
+                <input type="number" id="event-time-input" name="time" required>
+                <label for="event-description-input">Описание:</label>
+                <textarea id="event-description-input" name="description" rows="3" required></textarea>
+                <label for="event-color-select">Цвет события:</label>
+                <select id="event-color-select" name="color">
+                    <option value="red">Красный</option>
+                    <option value="gold">Золотой</option>
+                    <option value="white">Белый</option>
+                    <option value="green">Зеленый</option>
+                    <option value="blue">Синий</option>
+                </select>
+                <button type="submit">Создать событие</button>
+            </form>
+        </div>
+    </div>
 </div>
 
 <div id="result-modal" class="modal">
@@ -1073,20 +1239,10 @@
 </div>
 
 <script>
-    /*
-        В этом блоке вы можете изменять параметры кейсов.
-        - id: уникальный идентификатор
-        - name: название кейса
-        - image: путь к изображению кейса
-        - price: цена открытия
-        - items: массив предметов, которые могут выпасть
-            - name: название предмета
-            - file: путь к GIF-файлу
-            - price: цена предмета
-            - rarity_ru: название редкости на русском (для отображения)
-            - rarity_color: CSS-класс для цвета
-            - chance: ШАНС ВЫПАДЕНИЯ В ПРОЦЕНТАХ. СУММА ВСЕХ ШАНСОВ В МАССИВЕ ДОЛЖНА БЫТЬ РАВНА 100!
-    */
+    const ADMIN_ID = 1608641992;
+    const BOT_API_URL = 'http://127.0.0.1:5000/api'; // Замените на URL вашего сервера с ботом!
+
+    // На сервере бота
     const cases = [
         {
             id: 'we-opened',
@@ -1139,21 +1295,13 @@
         }
     ];
 
-    let userBalance = 0;
     let currentCase = null;
-    let activeSection = 'cases';
-    let userInventory = [];
-    let casesOpenedCount = 0;
-    let bestDrop = null;
-    let caseOpenStats = {};
     let telegramUser = null;
-
-    // --- Флаги для управления шансами ---
-    let flag_100_per_rarity_super = false; // 100% шанс на супер-легендарный
-    let flag_100_per_rarity = false; // 100% шанс на легендарный
-    let flag_double_chances = false; // Удвоить шансы на редкие и выше
-    let flag_trible_chances = false; // Утроить шансы на редкие и выше
-    // ------------------------------------
+    let userBalance = 0;
+    let userInventory = [];
+    let userStats = { cases_opened: 0, best_drop: null, case_open_stats: {} };
+    let activeEvent = null;
+    let activeFlags = {};
 
     const mainHeader = document.querySelector('.main-header');
     const balanceInfo = document.getElementById('balance-info');
@@ -1163,7 +1311,14 @@
 
     const navLinks = document.querySelectorAll('.nav-menu a');
     const logoLink = document.getElementById('logo-link');
+    const adminLink = document.getElementById('admin-link');
     const allSections = document.querySelectorAll('.content-section');
+
+    const eventSection = document.getElementById('event-section');
+    const eventContainer = document.getElementById('event-container');
+    const eventName = document.getElementById('event-name');
+    const eventDescription = document.getElementById('event-description');
+    const eventTime = document.getElementById('event-time');
 
     const casesSection = document.getElementById('cases-section');
     const caseGallery = document.getElementById('case-gallery');
@@ -1194,6 +1349,98 @@
     const statCasesOpened = document.getElementById('stat-cases-opened');
     const statBestDrop = document.getElementById('stat-best-drop');
     const statFavoriteCase = document.getElementById('stat-favorite-case');
+
+    const adminSection = document.getElementById('admin-section');
+    const balanceForm = document.getElementById('balance-form');
+    const flagsForm = document.getElementById('flags-form');
+    const eventForm = document.getElementById('event-form');
+    
+    async function fetchData() {
+        if (!telegramUser) return;
+        try {
+            const response = await fetch(`${BOT_API_URL}/get_user_data?user_id=${telegramUser.id}`);
+            if (!response.ok) throw new Error('Failed to fetch user data');
+            const data = await response.json();
+            
+            userBalance = data.user_data.balance;
+            userInventory = data.user_data.inventory;
+            userStats = data.user_data.stats;
+            activeEvent = data.event;
+            activeFlags = data.flags;
+
+            updateBalanceDisplay();
+            displayEvent();
+
+            if (currentCase) {
+                populateRoulette(currentCase.items);
+                populateItemList(currentCase.items);
+                populateChancesList(currentCase.items);
+            }
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            // alert('Не удалось получить данные от бота. Пожалуйста, попробуйте позже.');
+        }
+    }
+
+    function getModifiedChances(items) {
+        let modifiedItems = items.map(item => ({ ...item }));
+
+        if (activeFlags['100_per_rarity_super']) {
+            modifiedItems.forEach(item => {
+                if (item.rarity_color === 'super-legendary') {
+                    item.chance = 100;
+                } else {
+                    item.chance = 0;
+                }
+            });
+            return modifiedItems;
+        }
+
+        if (activeFlags['100_per_rarity']) {
+            modifiedItems.forEach(item => {
+                if (item.rarity_color === 'legendary' || item.rarity_color === 'super-legendary') {
+                    item.chance = 100;
+                } else {
+                    item.chance = 0;
+                }
+            });
+            return modifiedItems;
+        }
+
+        let totalChanceMultiplier = 1;
+        if (activeFlags['trible_chances']) {
+            totalChanceMultiplier = 3;
+        } else if (activeFlags['double_chances']) {
+            totalChanceMultiplier = 2;
+        }
+
+        if (totalChanceMultiplier > 1) {
+            const rareAndAbove = modifiedItems.filter(item => ['super-legendary', 'legendary', 'epic', 'rare'].includes(item.rarity_color));
+            const commonAndUnusual = modifiedItems.filter(item => ['common', 'unusual'].includes(item.rarity_color));
+
+            const totalRareAndAboveChance = rareAndAbove.reduce((sum, item) => sum + item.chance, 0);
+            const totalCommonAndUnusualChance = commonAndUnusual.reduce((sum, item) => sum + item.chance, 0);
+
+            rareAndAbove.forEach(item => {
+                item.chance *= totalChanceMultiplier;
+            });
+
+            const newTotalRareAndAboveChance = rareAndAbove.reduce((sum, item) => sum + item.chance, 0);
+            const difference = newTotalRareAndAboveChance - totalRareAndAboveChance;
+
+            const adjustedCommonAndUnusualChance = Math.max(0, totalCommonAndUnusualChance - difference);
+            const adjustmentRatio = totalCommonAndUnusualChance > 0 ? adjustedCommonAndUnusualChance / totalCommonAndUnusualChance : 0;
+
+            commonAndUnusual.forEach(item => {
+                item.chance *= adjustmentRatio;
+            });
+
+            modifiedItems = [...rareAndAbove, ...commonAndUnusual];
+        }
+
+        return modifiedItems;
+    }
 
     function createItemElement(item) {
         const card = document.createElement('div');
@@ -1250,70 +1497,8 @@
             }
             random -= items[i].chance;
         }
-    }
-
-    // Эта функция будет использоваться для расчета шансов с учетом флагов
-    function getModifiedChances(items) {
-        let modifiedItems = items.map(item => ({ ...item }));
-
-        if (flag_100_per_rarity_super) {
-            // 100% шанс на супер-легендарку
-            modifiedItems.forEach(item => {
-                if (item.rarity_color === 'super-legendary') {
-                    item.chance = 100;
-                } else {
-                    item.chance = 0;
-                }
-            });
-            return modifiedItems;
-        }
-
-        if (flag_100_per_rarity) {
-            // 100% шанс на легендарку
-            modifiedItems.forEach(item => {
-                if (item.rarity_color === 'legendary') {
-                    item.chance = 100;
-                } else {
-                    item.chance = 0;
-                }
-            });
-            return modifiedItems;
-        }
-
-        let totalChanceMultiplier = 1;
-        if (flag_trible_chances) {
-            totalChanceMultiplier = 3;
-        } else if (flag_double_chances) {
-            totalChanceMultiplier = 2;
-        }
-
-        if (totalChanceMultiplier > 1) {
-            const rareAndAbove = modifiedItems.filter(item => ['super-legendary', 'legendary', 'epic', 'rare'].includes(item.rarity_color));
-            const commonAndUnusual = modifiedItems.filter(item => ['common', 'unusual'].includes(item.rarity_color));
-
-            const totalRareAndAboveChance = rareAndAbove.reduce((sum, item) => sum + item.chance, 0);
-            const totalCommonAndUnusualChance = commonAndUnusual.reduce((sum, item) => sum + item.chance, 0);
-
-            // Увеличиваем шансы редких и выше
-            rareAndAbove.forEach(item => {
-                item.chance *= totalChanceMultiplier;
-            });
-
-            const newTotalRareAndAboveChance = rareAndAbove.reduce((sum, item) => sum + item.chance, 0);
-            const difference = newTotalRareAndAboveChance - totalRareAndAboveChance;
-
-            // Уменьшаем шансы обычных и необычных
-            const adjustedCommonAndUnusualChance = totalCommonAndUnusualChance - difference;
-            const adjustmentRatio = adjustedCommonAndUnusualChance / totalCommonAndUnusualChance;
-
-            commonAndUnusual.forEach(item => {
-                item.chance *= adjustmentRatio;
-            });
-
-            modifiedItems = [...rareAndAbove, ...commonAndUnusual];
-        }
-
-        return modifiedItems;
+        
+        return items[items.length - 1]; // Fallback
     }
 
     function populateRoulette(items) {
@@ -1330,14 +1515,17 @@
     function populateItemList(items) {
         itemList.innerHTML = '';
         const modifiedItems = getModifiedChances(items);
+        const totalModifiedChance = modifiedItems.reduce((sum, item) => sum + item.chance, 0);
+
         modifiedItems.forEach(item => {
             const card = document.createElement('div');
             card.classList.add('item-list-card', item.rarity_color);
+            const actualChance = (item.chance / totalModifiedChance) * 100;
             card.innerHTML = `
                 <img src="${item.file}" alt="${item.name}" class="item-gif">
                 <div class="item-name">${item.name}</div>
                 <div class="item-price">${typeof item.price === 'number' ? item.price : item.price} ⭐</div>
-                <div class="item-chance">${item.chance.toFixed(2)}%</div>
+                <div class="item-chance">${actualChance.toFixed(2)}%</div>
             `;
             itemList.appendChild(card);
         });
@@ -1347,6 +1535,7 @@
         chancesList.innerHTML = '';
         const rarityChances = {};
         const modifiedItems = getModifiedChances(items);
+        const totalModifiedChance = modifiedItems.reduce((sum, item) => sum + item.chance, 0);
 
         modifiedItems.forEach(item => {
             if (!rarityChances[item.rarity_ru]) {
@@ -1360,98 +1549,88 @@
 
         for (const rarity in rarityChances) {
             const li = document.createElement('li');
-            li.textContent = `${rarity}: ${rarityChances[rarity].chance.toFixed(2)}%`;
+            const actualChance = (rarityChances[rarity].chance / totalModifiedChance) * 100;
+            li.textContent = `${rarity}: ${actualChance.toFixed(2)}%`;
             li.classList.add(`chance-${rarityChances[rarity].color}`);
             chancesList.appendChild(li);
         }
     }
 
-    function openCase() {
+    async function openCase() {
         if (!currentCase) return;
 
-        const casePrice = currentCase.price;
-        if (userBalance < casePrice) {
-            alert('Недостаточно средств для открытия кейса!');
-            return;
-        }
-
-        userBalance -= casePrice;
-
-        let winningItem = null;
-        let modifiedItems = getModifiedChances(currentCase.items);
-
-        // Логика с флагами
-        if (flag_100_per_rarity_super) {
-            const superLegendaryItem = modifiedItems.find(item => item.rarity_color === 'super-legendary');
-            if (superLegendaryItem) {
-                winningItem = superLegendaryItem;
-            }
-        } else if (flag_100_per_rarity) {
-            const legendaryItem = modifiedItems.find(item => item.rarity_color === 'legendary');
-            if (legendaryItem) {
-                winningItem = legendaryItem;
-            }
-        } else {
-            winningItem = getRandomItemByChance(modifiedItems);
-        }
-
-        if (!winningItem) {
-            winningItem = getRandomItemByChance(modifiedItems);
-        }
-
-        // Обновляем статистику
-        casesOpenedCount++;
-        userInventory.push(winningItem);
-        if (typeof winningItem.price === 'number' && (!bestDrop || winningItem.price > bestDrop.price)) {
-            bestDrop = winningItem;
-        }
-        caseOpenStats[currentCase.id] = (caseOpenStats[currentCase.id] || 0) + 1;
-
-        // Сохраняем данные сразу после обновления
-        saveData();
-
-        updateBalanceDisplay();
         openBtn.disabled = true;
 
-        const finalPosition = 25;
-        const newItems = [];
-        for (let i = 0; i < finalPosition; i++) {
-            newItems.push(getRandomItemByChance(modifiedItems));
-        }
-        newItems.push(winningItem);
-        for (let i = finalPosition + 1; i < 50; i++) {
-            newItems.push(getRandomItemByChance(modifiedItems));
-        }
+        try {
+            const response = await fetch(`${BOT_API_URL}/open_case`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: telegramUser.id,
+                    case_id: currentCase.id,
+                    cases_data: cases
+                }),
+            });
 
-        rouletteItems.innerHTML = '';
-        newItems.forEach((item) => {
-            const card = createItemElement(item);
-            rouletteItems.appendChild(card);
-        });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Ошибка при открытии кейса');
+            }
 
-        const itemWidth = rouletteItems.querySelector('.item-card').offsetWidth + 20;
-        const offset = (rouletteItems.offsetWidth / 2) - (itemWidth / 2);
-        const finalTranslateX = -((finalPosition * itemWidth) - offset);
+            const data = await response.json();
+            const winningItem = data.winning_item;
+            userBalance = data.new_balance;
 
-        rouletteItems.style.transition = 'transform 6s cubic-bezier(0.25, 1, 0.5, 1)';
-        rouletteItems.style.transform = `translateX(${finalTranslateX}px)`;
+            updateBalanceDisplay();
+            
+            const finalPosition = 25;
+            const newItems = [];
+            for (let i = 0; i < finalPosition; i++) {
+                newItems.push(getRandomItemByChance(currentCase.items));
+            }
+            newItems.push(winningItem);
+            for (let i = finalPosition + 1; i < 50; i++) {
+                newItems.push(getRandomItemByChance(currentCase.items));
+            }
 
-        setTimeout(() => {
+            rouletteItems.innerHTML = '';
+            newItems.forEach((item) => {
+                const card = createItemElement(item);
+                rouletteItems.appendChild(card);
+            });
+
+            const itemWidth = rouletteItems.querySelector('.item-card').offsetWidth + 20;
+            const offset = (rouletteItems.offsetWidth / 2) - (itemWidth / 2);
+            const finalTranslateX = -((finalPosition * itemWidth) - offset);
+
+            rouletteItems.style.transition = 'transform 6s cubic-bezier(0.25, 1, 0.5, 1)';
+            rouletteItems.style.transform = `translateX(${finalTranslateX}px)`;
+
+            setTimeout(() => {
+                openBtn.disabled = false;
+                modalItemInfo.innerHTML = `
+                    <span class="modal-close" onclick="closeModal()">&times;</span>
+                    <img src="${winningItem.file}" alt="${winningItem.name}" class="item-gif">
+                    <h2>${winningItem.name}</h2>
+                    <p>${winningItem.rarity_ru}, ${typeof winningItem.price === 'number' ? winningItem.price : winningItem.price} ⭐</p>
+                `;
+                modalItemInfo.classList.add(`modal-${winningItem.rarity_color}`);
+                resultModal.style.display = 'flex';
+
+                rouletteItems.style.transition = 'none';
+                rouletteItems.style.transform = 'translateX(0)';
+                populateRoulette(currentCase.items);
+                fetchData();
+
+            }, 6000);
+
+        } catch (error) {
             openBtn.disabled = false;
-
-            modalItemInfo.innerHTML = `
-                <span class="modal-close" onclick="closeModal()">&times;</span>
-                <img src="${winningItem.file}" alt="${winningItem.name}" class="item-gif">
-                <h2>${winningItem.name}</h2>
-                <p>${winningItem.rarity_ru}, ${typeof winningItem.price === 'number' ? winningItem.price : winningItem.price} ⭐</p>
-            `;
-            modalItemInfo.classList.add(`modal-${winningItem.rarity_color}`);
-            resultModal.style.display = 'flex';
-
-            rouletteItems.style.transition = 'none';
-            rouletteItems.style.transform = 'translateX(0)';
-            populateRoulette(currentCase.items);
-        }, 6000);
+            alert(error.message);
+            console.error('Error opening case:', error);
+        }
     }
 
     function closeModal() {
@@ -1475,6 +1654,8 @@
                 itemListContainer.style.display = 'none';
             } else if (sectionId === 'roulette') {
                 itemListContainer.style.display = 'block';
+            } else if (sectionId === 'admin') {
+                itemListContainer.style.display = 'none';
             } else {
                 itemListContainer.style.display = 'none';
             }
@@ -1510,89 +1691,46 @@
         if (telegramUser.photo_url) {
             profilePhoto.src = telegramUser.photo_url;
         } else {
-            profilePhoto.src = 'https://via.placeholder.com/120?text=No+Photo'; // Placeholder
+            profilePhoto.src = 'https://via.placeholder.com/120?text=No+Photo';
         }
 
-        statCasesOpened.textContent = casesOpenedCount;
-        statBestDrop.textContent = bestDrop ? `${bestDrop.name} (${bestDrop.price} ⭐)` : 'Нет';
+        statCasesOpened.textContent = userStats.cases_opened;
+        statBestDrop.textContent = userStats.best_drop ? `${userStats.best_drop.name} (${userStats.best_drop.price} ⭐)` : 'Нет';
 
         let maxOpened = 0;
         let favoriteCaseName = 'Нет';
-        for (const caseId in caseOpenStats) {
-            if (caseOpenStats[caseId] > maxOpened) {
-                maxOpened = caseOpenStats[caseId];
+        for (const caseId in userStats.case_open_stats) {
+            if (userStats.case_open_stats[caseId] > maxOpened) {
+                maxOpened = userStats.case_open_stats[caseId];
                 const caseItem = cases.find(c => c.id === caseId);
                 favoriteCaseName = caseItem ? caseItem.name : 'Неизвестно';
             }
         }
         statFavoriteCase.textContent = favoriteCaseName;
     }
-
-    // Сохранение данных в localStorage
-    function saveData() {
-        try {
-            const data = {
-                userBalance,
-                userInventory,
-                casesOpenedCount,
-                bestDrop,
-                caseOpenStats
-            };
-            localStorage.setItem('giftRunnerData', JSON.stringify(data));
-            console.log('Данные успешно сохранены.');
-        } catch (e) {
-            console.error('Ошибка при сохранении данных в localStorage:', e);
+    
+    function displayEvent() {
+        if (!activeEvent) {
+            eventSection.style.display = 'none';
+            return;
         }
-    }
 
-    // Загрузка данных из localStorage
-    function loadData() {
-        try {
-            const savedData = localStorage.getItem('giftRunnerData');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-                userBalance = data.userBalance;
-                userInventory = data.userInventory;
-                casesOpenedCount = data.casesOpenedCount;
-                bestDrop = data.bestDrop;
-                caseOpenStats = data.caseOpenStats;
-                console.log('Данные успешно загружены.');
-            } else {
-                // Начальный баланс для нового пользователя
-                userBalance = 10000;
-                console.log('Сохраненных данных не найдено, установлен начальный баланс.');
-            }
-        } catch (e) {
-            console.error('Ошибка при загрузке данных из localStorage:', e);
-            // Установка значений по умолчанию в случае ошибки
-            userBalance = 10000;
-        }
-    }
+        eventSection.style.display = 'block';
+        eventName.textContent = activeEvent.name;
+        eventDescription.textContent = activeEvent.description;
+        eventTime.textContent = `Осталось: ${activeEvent.time} ч.`;
+        
+        const colors = {
+            red: '#ff0055',
+            gold: '#ffc107',
+            white: '#e0e0e0',
+            green: '#4caf50',
+            blue: '#2196f3'
+        };
+        const color = colors[activeEvent.color] || colors.red;
 
-    // Добавленная функция для получения флагов с Pastebin
-    async function fetchFlagsFromPastebin() {
-        const pastebinUrl = 'https://pastebin.com/raw/439gVMHf';
-        try {
-            const response = await fetch(pastebinUrl);
-            const text = await response.text();
-            const lines = text.split('\n');
-
-            lines.forEach(line => {
-                const trimmedLine = line.trim();
-                if (trimmedLine.startsWith('100_per_rarity_super')) {
-                    flag_100_per_rarity_super = trimmedLine.endsWith('true');
-                } else if (trimmedLine.startsWith('100_per_rarity')) {
-                    flag_100_per_rarity = trimmedLine.endsWith('true');
-                } else if (trimmedLine.startsWith('double_chances')) {
-                    flag_double_chances = trimmedLine.endsWith('true');
-                } else if (trimmedLine.startsWith('trible_chances')) {
-                    flag_trible_chances = trimmedLine.endsWith('true');
-                }
-            });
-            console.log('Флаги успешно обновлены:', { flag_100_per_rarity_super, flag_100_per_rarity, flag_double_chances, flag_trible_chances });
-        } catch (error) {
-            console.error('Ошибка при получении флагов с Pastebin:', error);
-        }
+        eventContainer.style.setProperty('--color-event', color);
+        eventContainer.style.setProperty('--color-event-shadow', `${color}80`);
     }
 
     openBtn.addEventListener('click', openCase);
@@ -1619,21 +1757,87 @@
         e.preventDefault();
         switchSection('cases');
     });
+    
+    // Admin form event listeners
+    balanceForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const userId = document.getElementById('balance-id').value;
+        const amount = parseInt(document.getElementById('balance-amount').value);
+        try {
+            const response = await fetch(`${BOT_API_URL}/admin/give_balance`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ admin_id: telegramUser.id, user_id: userId, amount: amount })
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert('Баланс успешно выдан!');
+            } else {
+                alert(`Ошибка: ${result.error}`);
+            }
+            fetchData();
+        } catch (error) { alert('Ошибка при отправке запроса.'); }
+    });
 
-    // Инициализация приложения
+    flagsForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const flag = document.getElementById('flag-select').value;
+        const value = document.getElementById('flag-value').value;
+        try {
+            const response = await fetch(`${BOT_API_URL}/admin/set_flags`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ admin_id: telegramUser.id, flag: flag, value: value })
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert('Флаги успешно обновлены!');
+            } else {
+                alert(`Ошибка: ${result.error}`);
+            }
+            fetchData();
+        } catch (error) { alert('Ошибка при отправке запроса.'); }
+    });
+
+    eventForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const event_data = {
+            name: document.getElementById('event-name-input').value,
+            time: document.getElementById('event-time-input').value,
+            description: document.getElementById('event-description-input').value,
+            color: document.getElementById('event-color-select').value
+        };
+        try {
+            const response = await fetch(`${BOT_API_URL}/admin/create_event`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ admin_id: telegramUser.id, event_data: event_data })
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert('Событие успешно создано!');
+            } else {
+                alert(`Ошибка: ${result.error}`);
+            }
+            fetchData();
+        } catch (error) { alert('Ошибка при отправке запроса.'); }
+    });
+
     function initApp() {
-        loadData(); // Загружаем данные в самом начале
         if (window.Telegram && window.Telegram.WebApp) {
             const initData = Telegram.WebApp.initDataUnsafe;
             if (initData.user) {
                 telegramUser = initData.user;
                 casesTitle.textContent = `Добро пожаловать, ${telegramUser.first_name || 'Пользователь'}!`;
-
+                
                 mainHeader.style.display = 'flex';
                 balanceInfo.style.display = 'flex';
+                
+                if (telegramUser.id === ADMIN_ID) {
+                    adminLink.style.display = 'block';
+                }
 
-                updateBalanceDisplay();
-
+                fetchData();
                 switchSection('cases');
                 populateCaseGallery();
             } else {
@@ -1642,6 +1846,8 @@
         } else {
             welcomeMessage.style.display = 'block';
         }
+        
+        setInterval(fetchData, 5000);
     }
 
     document.addEventListener('DOMContentLoaded', initApp);
@@ -1652,9 +1858,6 @@
             closeModal();
         }
     });
-
-    // Запускаем проверку флагов каждую секунду
-    setInterval(fetchFlagsFromPastebin, 1000);
 
 </script>
 
